@@ -1,71 +1,98 @@
-# BigBang-v1 Evaluation Harness
+<div align="center">
 
-This repository contains the public evaluation harness for
-[BigBang-v1](https://huggingface.co/endless-frontier/BigBang-v1), a
-Qwen3.6-35B-A3B model with 35B total parameters and 3B activated parameters.
-It provides the `search`, `visit`, and `code_exec` tools, official benchmark-data
-download recipes, and a minimal sequential evaluation script.
+# BigBang-v1
 
-Project website: [https://endlessfrontier.tech/](https://endlessfrontier.tech/)
+<p>
+  <a href="https://huggingface.co/endless-frontier/BigBang-v1"><img alt="Hugging Face model" src="https://img.shields.io/badge/Model-Hugging%20Face-FFD21E?style=flat-square&logo=huggingface&logoColor=000000"></a>
+  <a href="https://endlessfrontier.tech/"><img alt="Official website" src="https://img.shields.io/badge/Website-endlessfrontier.tech-4E9FD1?style=flat-square&logo=safari&logoColor=ffffff"></a>
+  <a href="https://github.com/endless-frontier/BigBang-v1"><img alt="GitHub repository" src="https://img.shields.io/badge/GitHub-BigBang--v1-181717?style=flat-square&logo=github&logoColor=ffffff"></a>
+  <img alt="Paper coming soon" src="https://img.shields.io/badge/Paper-Coming%20Soon-B8C0CC?style=flat-square">
+</p>
 
-The release does not include credentials, deployment code, cloud control
-planes, dashboards, trajectory-audit services, retry managers, or
-mid-trajectory resume infrastructure.
+</div>
+
+**BigBang-v1** is a 35B-A3B agentic model built on Qwen3.6-35B-A3B, with 35B
+total parameters and 3B parameters activated during inference. We evaluate it
+on long-horizon search, coding, scientific research, and AI research.
+
+We release the reported results and a lightweight evaluation harness with
+`search`, `visit`, and `code_exec`, along with benchmark download scripts and a
+sequential evaluation runner.
 
 ## Main results
 
-BigBang-V1 is evaluated on six representative benchmarks spanning long-horizon
-search, software engineering, and scientific research. It obtains the highest
-reported score among the selected 35B models on all six benchmarks. BigBang-V1
-exceeds DeepSeek V4 Pro Preview on Frontier Science Research, Humanity's Last
-Exam, BioMysteryBench-HD, and PaperBench. The model has 35B total parameters
-with 3B activated during inference.
+On the six benchmarks below, BigBang-v1 records the highest score among the
+selected 35B models. It exceeds DeepSeek V4 Pro Preview on Frontier Science
+Research, Humanity's Last Exam, BioMysteryBench-HD, and PaperBench, and exceeds
+DeepSeek V4 Flash Preview on BrowseComp and SWE-Bench Pro.
 
 <p align="center">
-  <img src="./assets/bigbang_main_figure.png" alt="BigBang-V1 on six representative benchmarks" width="100%">
+  <a href="./assets/bigbang_main_figure.pdf"><img src="./assets/bigbang_main_figure.png" alt="BigBang-V1 on six representative benchmarks" width="100%"></a>
 </p>
 
-<p align="center"><em>BigBang-V1 on six representative benchmarks.</em></p>
+<p align="center"><em>BigBang-v1 results on six representative benchmarks.</em></p>
 
 ## Benchmark results
 
-Comparison with representative closed- and open-source frontier models,
-together with models at the 35B scale, across long-horizon search, coding,
-scientific research, and AI research benchmarks. `-` indicates that the score
-is not publicly available or was not tested.
+Comparison of BigBang-V1 with representative closed- and open-source frontier
+models, together with models at the 35B scale, across benchmarks for
+long-horizon search, coding, scientific research, and AI research. The `-`
+indicates the score is not publicly available or not tested.
 
-| Benchmark | Claude<br>Opus 4.8 | Gemini<br>3.1 Pro | GPT<br>5.5 | GLM<br>5.2 | DeepSeek V4<br>Flash Preview | DeepSeek V4<br>Pro Preview | Step-3.7<br>Flash | Qwen3.6<br>35B-A3B | Nex-N2<br>mini | Agents<br>A1 | Apodex<br>1.0-mini | BigBang<br>V1 |
-|:--|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|
-| **Long-horizon Search** |  |  |  |  |  |  |  |  |  |  |  |  |
-| BrowseComp | 84.3 | 85.9 | 84.4 | 68.7 | 73.2 | 83.4 | 75.8 | 67.9 | 74.1 | 48.5 | 73.9 | **76.5** |
-| XBench | 61.4 | - | 72.4 | 65.8 | 66.0 | 64.8 | 50.8 | 32.6 | 57.2 | 52.4 | 61.8 | **58.4** |
-| **Coding Tasks** |  |  |  |  |  |  |  |  |  |  |  |  |
-| SWE-Bench Pro | 69.2 | 54.2 | 58.6 | 62.1 | 52.6 | 55.4 | 56.3 | 43.6 | 50.2 | 42.3 | 38.7 | **54.2** |
-| SciCode-V-Sub | 92.3 | - | 95.1 | 84.3 | 83.7 | 90.2 | - | 56.5 | 39.0 | 64.1 | - | **68.6** |
-| SciCode-V-Main | 78.1 | - | 90.6 | 70.3 | 68.6 | 78.1 | - | 26.6 | 15.6 | 50.0 | - | **50.0** |
-| **Scientific Research** |  |  |  |  |  |  |  |  |  |  |  |  |
-| FS-R | 45.2 | 24.8 | 58.3 | 52.4 | 37.7 | 40.7 | 37.2 | 11.9 | 36.8 | 38.4 | 29.6 | **46.2** |
-| HLE | 57.9 | 51.4 | 52.2 | 54.7 | 45.1 | 48.2 | 47.2 | 36.2 | 38.4 | 46.3 | 45.3 | **50.3** |
-| BioMystery-HS | 88.5 | - | 76.7 | 75.3 | 68.0 | 64.4 | 57.5 | 44.8 | 42.9 | 48.9 | 50.2 | **57.5** |
-| BioMystery-HD | 42.4 | - | 23.5 | 20.6 | 23.5 | 13.7 | 11.8 | 2.0 | 5.9 | 2.0 | 5.9 | **15.7** |
-| **AI Research** |  |  |  |  |  |  |  |  |  |  |  |  |
-| MLE-Bench | 50.0 | - | 54.5 | 72.7 | 40.9 | 59.1 | 40.9 | 31.8 | 4.5 | 27.3 | 27.3 | **36.4** |
-| PaperBench | - | - | 64.0 | 64.0 | 55.0 | 40.0 | 37.0 | 31.0 | 15.0 | 17.0 | 21.0 | **54.0** |
+<table>
+<thead>
+<tr>
+  <th rowspan="2" align="left">Benchmark</th>
+  <th colspan="3" align="center">Closed-Source Models</th>
+  <th colspan="4" align="center">Open-Source Models</th>
+  <th colspan="5" align="center">35B Models</th>
+</tr>
+<tr>
+  <th align="center">Claude<br>Opus 4.8</th>
+  <th align="center">Gemini<br>3.1 Pro</th>
+  <th align="center">GPT<br>5.5</th>
+  <th align="center">GLM<br>5.2</th>
+  <th align="center">DeepSeek V4<br>Flash Preview</th>
+  <th align="center">DeepSeek V4<br>Pro Preview</th>
+  <th align="center">Step-3.7<br>Flash</th>
+  <th align="center">Qwen3.6<br>35B-A3B</th>
+  <th align="center">Nex-N2<br>mini</th>
+  <th align="center">Agents<br>A1</th>
+  <th align="center">Apodex<br>1.0-mini</th>
+  <th align="center">BigBang<br>V1</th>
+</tr>
+</thead>
+<tbody>
+<tr><td colspan="13" align="center"><em>Long-horizon Search</em></td></tr>
+<tr><td>BrowseComp</td><td align="center">84.3</td><td align="center">85.9</td><td align="center">84.4</td><td align="center">68.7</td><td align="center">73.2</td><td align="center">83.4</td><td align="center">75.8</td><td align="center">67.9</td><td align="center">74.1</td><td align="center">48.5</td><td align="center">73.9</td><td align="center"><strong>76.5</strong></td></tr>
+<tr><td>xbench</td><td align="center">61.4</td><td align="center">65.0</td><td align="center">72.4</td><td align="center">65.8</td><td align="center">66</td><td align="center">64.8</td><td align="center">50.8</td><td align="center">32.6</td><td align="center">57.2</td><td align="center">52.4</td><td align="center">61.8</td><td align="center"><strong>58.4</strong></td></tr>
+<tr><td colspan="13" align="center"><em>Coding Tasks</em></td></tr>
+<tr><td>SWE-Bench Pro</td><td align="center">69.2</td><td align="center">54.2</td><td align="center">58.6</td><td align="center">62.1</td><td align="center">52.6</td><td align="center">55.4</td><td align="center">56.3</td><td align="center">43.6</td><td align="center">50.2</td><td align="center">42.3</td><td align="center">38.7</td><td align="center"><strong>54.2</strong></td></tr>
+<tr><td>SciCode-V-Sub</td><td align="center">92.3</td><td align="center">-</td><td align="center">95.1</td><td align="center">84.3</td><td align="center">83.7</td><td align="center">90.2</td><td align="center">-</td><td align="center">56.5</td><td align="center">39.0</td><td align="center">64.1</td><td align="center">-</td><td align="center"><strong>68.6</strong></td></tr>
+<tr><td>SciCode-V-Main</td><td align="center">78.1</td><td align="center">-</td><td align="center">90.6</td><td align="center">70.3</td><td align="center">68.6</td><td align="center">78.1</td><td align="center">-</td><td align="center">26.6</td><td align="center">15.6</td><td align="center">50.0</td><td align="center">-</td><td align="center"><strong>50.0</strong></td></tr>
+<tr><td colspan="13" align="center"><em>Scientific Research</em></td></tr>
+<tr><td>FS-R</td><td align="center">45.2</td><td align="center">24.8</td><td align="center">58.3</td><td align="center">52.4</td><td align="center">37.7</td><td align="center">40.7</td><td align="center">37.2</td><td align="center">11.9</td><td align="center">36.8</td><td align="center">38.4</td><td align="center">29.6</td><td align="center"><strong>46.2</strong></td></tr>
+<tr><td>HLE</td><td align="center">57.9</td><td align="center">51.4</td><td align="center">52.2</td><td align="center">54.7</td><td align="center">45.1</td><td align="center">48.2</td><td align="center">47.2</td><td align="center">36.2</td><td align="center">38.4</td><td align="center">46.3</td><td align="center">45.3</td><td align="center"><strong>50.3</strong></td></tr>
+<tr><td>BioMystery-HS</td><td align="center">88.5</td><td align="center">-</td><td align="center">76.7</td><td align="center">75.3</td><td align="center">68.0</td><td align="center">64.4</td><td align="center">57.5</td><td align="center">44.8</td><td align="center">42.9</td><td align="center">48.9</td><td align="center">50.2</td><td align="center"><strong>57.5</strong></td></tr>
+<tr><td>BioMystery-HD</td><td align="center">42.4</td><td align="center">-</td><td align="center">23.5</td><td align="center">20.6</td><td align="center">23.5</td><td align="center">13.7</td><td align="center">11.8</td><td align="center">2.0</td><td align="center">5.9</td><td align="center">2.0</td><td align="center">5.9</td><td align="center"><strong>15.7</strong></td></tr>
+<tr><td colspan="13" align="center"><em>AI Research</em></td></tr>
+<tr><td>MLE-Bench</td><td align="center">50.0</td><td align="center">-</td><td align="center">54.5</td><td align="center">72.7</td><td align="center">40.9</td><td align="center">59.1</td><td align="center">40.9</td><td align="center">31.8</td><td align="center">4.5</td><td align="center">27.3</td><td align="center">27.3</td><td align="center"><strong>36.4</strong></td></tr>
+<tr><td>PaperBench</td><td align="center">-</td><td align="center">-</td><td align="center">64.2</td><td align="center">63.6</td><td align="center">40.4</td><td align="center">50.4</td><td align="center">36.7</td><td align="center">30.7</td><td align="center">14.8</td><td align="center">17.3</td><td align="center">20.5</td><td align="center"><strong>53.6</strong></td></tr>
+</tbody>
+</table>
 
-We apply a strict evaluation-time decontamination policy to prevent agents from
-directly searching for benchmark artifacts or reference answers. Queries that
-explicitly target Hugging Face are rejected; search results containing
-`huggingface.co`, `hf.co`, or their subdomains are removed; direct `visit` calls
-to those domains are blocked; and reference answers are never included in the
-agent-visible messages or tool outputs. Scores for comparison models may
-therefore differ from their official reports, which may use different harnesses
-or web-access policies.
+We use a strict evaluation-time decontamination policy to prevent direct
+retrieval of benchmark artifacts or reference answers. We reject queries that
+explicitly target Hugging Face, filter search results from `huggingface.co`,
+`hf.co`, and their subdomains, block direct `visit` calls to those domains, and
+never expose reference answers in agent-visible messages or tool outputs.
+Comparison scores may therefore differ from official reports that use other
+harnesses or web-access policies.
 
-The table reproduces the complete result table from the BigBang-v1 Hugging Face
-model card. The public harness in this repository covers the four evaluations
-listed below. For example, the SciCode rows remain in the result table for
-model-card consistency, but this repository does not include a SciCode dataset
-loader or evaluation implementation.
+The table matches the complete result table on the BigBang-v1 Hugging Face
+model card. We release evaluation code for the four benchmarks listed below.
+SciCode remains in the table for consistency with the model card, but is not
+included in this harness.
 
 ## Supported evaluations
 
@@ -76,29 +103,28 @@ loader or evaluation implementation.
 | `frontierscience` | FrontierScience-Research | [`openai/frontierscience`](https://huggingface.co/datasets/openai/frontierscience) research split | Avg@30, aligned with the official default |
 | `hle` | Humanity's Last Exam, text-only | Gated [`cais/hle`](https://huggingface.co/datasets/cais/hle) dataset | One score per text-only item |
 
-BrowseComp uses a five-attempt discard-all setting and forces a final answer
-when the fifth-attempt limit is reached. xbench and FrontierScience-Research
-use Avg@5 and Avg@30, respectively, matching their official defaults.
+For BrowseComp, we use five discard-all attempts and force a final answer when
+the fifth-attempt limit is reached. We evaluate xbench with Avg@5 and
+FrontierScience-Research with Avg@30, matching their official defaults.
 
 BrowseComp and xbench are MIT licensed through their official repositories.
 FrontierScience is Apache-2.0. HLE is marked MIT but gated, and its dataset card
-asks users not to publicly share, re-upload, or distribute the dataset. This
-repository therefore stores download recipes rather than benchmark data. See
-[`THIRD_PARTY.md`](THIRD_PARTY.md) for direct source and license links.
+asks users not to publicly share, re-upload, or distribute the dataset. We
+therefore provide download scripts rather than copies of the benchmark data.
+See [`THIRD_PARTY.md`](THIRD_PARTY.md) for source and license links.
 
 ## Tool policy
 
-Each benchmark item is solved by an OpenAI-compatible tool-calling loop with:
+We run each benchmark item in an OpenAI-compatible tool-calling loop with:
 
 - `search`: Google Search results through Serper;
 - `visit`: webpage reading through Jina Reader followed by goal-conditioned
   extraction using an explicitly configured summary-model endpoint;
 - `code_exec`: a persistent, per-item E2B shell sandbox.
 
-The agent may make at most 500 tool calls per trajectory. Hugging Face pages are
-blocked from both `search` results and direct `visit` calls during evaluation to
-reduce direct retrieval of benchmark artifacts or reference answers. This
-agent-visible policy does not block the separate data-download script.
+Each trajectory is capped at 500 tool calls. During evaluation, we remove
+Hugging Face pages from `search` results and block direct `visit` calls to those
+pages. The separate data-download script is not subject to this restriction.
 
 ## Installation
 
@@ -111,18 +137,17 @@ pip install -e .
 cp .env.example .env
 ```
 
-No package-level console command or subcommand hierarchy is installed. Run the
-two scripts in `scripts/` directly.
+The package does not install a console command. Run the two scripts in
+`scripts/` directly.
 
-`OPENAI_BASE_URL`, `OPENAI_API_KEY`, and `OPENAI_MODEL` identify the evaluated
-model through an OpenAI-compatible API. `SERPER_API_KEY`, `JINA_API_KEY`, and
+Set `OPENAI_BASE_URL`, `OPENAI_API_KEY`, and `OPENAI_MODEL` for the evaluated
+model's OpenAI-compatible endpoint. `SERPER_API_KEY`, `JINA_API_KEY`, and
 `E2B_API_KEY` enable the three tools. `VISIT_SUMMARY_BASE_URL`,
 `VISIT_SUMMARY_API_KEY`, and `VISIT_SUMMARY_MODEL` configure the extraction
-stage inside `visit`. Judge settings are separate and are required only when
-`--judge` is used.
+stage in `visit`. Judge settings are separate and are needed only with
+`--judge`.
 
-For example, BigBang-v1 can be served with SGLang and addressed through its
-OpenAI-compatible endpoint:
+Serve BigBang-v1 with SGLang as follows:
 
 ```bash
 python -m sglang.launch_server \
@@ -136,15 +161,14 @@ python -m sglang.launch_server \
 
 ## Download benchmark data
 
-Download the three non-gated datasets:
+Download the three non-gated benchmarks:
 
 ```bash
 python scripts/download_data.py \
   --benchmarks browsecomp xbench frontierscience
 ```
 
-For HLE, accept the access conditions on its Hugging Face page, set `HF_TOKEN`,
-and run:
+For HLE, accept the access conditions on Hugging Face, set `HF_TOKEN`, and run:
 
 ```bash
 python scripts/download_data.py --benchmarks hle
@@ -152,7 +176,7 @@ python scripts/download_data.py --benchmarks hle
 
 ## Run an evaluation
 
-A one-item, one-repeat smoke run is:
+Run one BrowseComp item once:
 
 ```bash
 python scripts/run_eval.py \
@@ -162,8 +186,8 @@ python scripts/run_eval.py \
   --output outputs/browsecomp-smoke.jsonl
 ```
 
-For a full run, omit `--limit`. When `--repeats` is omitted, the script uses the
-protocol default: Avg@5 for xbench and Avg@30 for FrontierScience-Research.
+Omit `--limit` for a full run. Without `--repeats`, the runner uses Avg@5 for
+xbench and Avg@30 for FrontierScience-Research.
 
 ```bash
 python scripts/run_eval.py \
@@ -171,8 +195,8 @@ python scripts/run_eval.py \
   --output outputs/xbench.jsonl
 ```
 
-To score answers with an explicitly configured OpenAI-compatible judge, add
-`--judge`. No judge endpoint is inferred from the evaluated-model endpoint.
+Add `--judge` to score answers with an OpenAI-compatible judge. Configure the
+judge endpoint separately from the evaluated-model endpoint.
 
 ```bash
 python scripts/run_eval.py \
@@ -181,10 +205,11 @@ python scripts/run_eval.py \
   --judge
 ```
 
-Each output line is a JSON record containing the benchmark, item identifier,
-repeat index, final response, tool-call count, and conversation trajectory.
-With `--judge`, it also contains the parsed score and raw judge response. An
-existing output path is rejected unless `--overwrite` is supplied.
+The runner writes one JSON record per item and repeat. Each record contains the
+benchmark, item identifier, repeat index, final response, tool-call count, and
+conversation trajectory. With `--judge`, it also contains the parsed score and
+raw judge response. The runner rejects an existing output path unless
+`--overwrite` is supplied.
 
 Keep credentials in an untracked `.env` file or secret manager. Do not commit
 downloaded benchmark data, generated trajectories, reference answers, or
