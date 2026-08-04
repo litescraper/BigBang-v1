@@ -15,9 +15,9 @@
 total parameters and 3B parameters activated during inference. We evaluate it
 on long-horizon search, coding, scientific research, and AI research.
 
-We release the reported results and a lightweight evaluation harness with
-`search`, `visit`, and `code_exec`, along with benchmark download scripts and a
-sequential evaluation runner.
+We release the reported results, a lightweight general-agent harness with
+`search`, `visit`, and `code_exec`, and download support for the official
+SWE-Bench Pro and SciCode-Verified datasets.
 
 ## Main results
 
@@ -65,7 +65,7 @@ indicates the score is not publicly available or not tested.
 <tbody>
 <tr><td colspan="13" align="center"><em>Long-horizon Search</em></td></tr>
 <tr><td>BrowseComp</td><td align="center">84.3</td><td align="center">85.9</td><td align="center">84.4</td><td align="center">68.7</td><td align="center">73.2</td><td align="center">83.4</td><td align="center">75.8</td><td align="center">67.9</td><td align="center">74.1</td><td align="center">48.5</td><td align="center">73.9</td><td align="center"><strong>76.5</strong></td></tr>
-<tr><td>xbench</td><td align="center">61.4</td><td align="center">65.0</td><td align="center">72.4</td><td align="center">65.8</td><td align="center">66</td><td align="center">64.8</td><td align="center">50.8</td><td align="center">32.6</td><td align="center">57.2</td><td align="center">52.4</td><td align="center">61.8</td><td align="center"><strong>58.4</strong></td></tr>
+<tr><td>xbench</td><td align="center">61.4</td><td align="center">65.0</td><td align="center">72.4</td><td align="center">65.8</td><td align="center">62.2</td><td align="center">64.8</td><td align="center">50.8</td><td align="center">32.6</td><td align="center">57.2</td><td align="center">52.4</td><td align="center">61.8</td><td align="center"><strong>58.4</strong></td></tr>
 <tr><td colspan="13" align="center"><em>Coding Tasks</em></td></tr>
 <tr><td>SWE-Bench Pro</td><td align="center">69.2</td><td align="center">54.2</td><td align="center">58.6</td><td align="center">62.1</td><td align="center">52.6</td><td align="center">55.4</td><td align="center">56.3</td><td align="center">43.6</td><td align="center">50.2</td><td align="center">42.3</td><td align="center">38.7</td><td align="center"><strong>54.2</strong></td></tr>
 <tr><td>SciCode-V-Sub</td><td align="center">92.3</td><td align="center">-</td><td align="center">95.1</td><td align="center">84.3</td><td align="center">83.7</td><td align="center">90.2</td><td align="center">-</td><td align="center">56.5</td><td align="center">39.0</td><td align="center">64.1</td><td align="center">-</td><td align="center"><strong>68.6</strong></td></tr>
@@ -90,9 +90,9 @@ Comparison scores may therefore differ from official reports that use other
 harnesses or web-access policies.
 
 The table matches the complete result table on the BigBang-v1 Hugging Face
-model card. We release evaluation code for the four benchmarks listed below.
-SciCode remains in the table for consistency with the model card, but is not
-included in this harness.
+model card. BrowseComp, xbench, FrontierScience-Research, and HLE use the
+general-agent runner in this repository. SWE-Bench Pro and SciCode-Verified use
+their benchmark-specific official harnesses, as described below.
 
 ## Supported evaluations
 
@@ -102,20 +102,31 @@ included in this harness.
 | `xbench` | xbench-DeepSearch-2510 | [xbench encrypted CSV](https://github.com/xbench-ai/xbench-evals/blob/main/data/DeepSearch-2510.csv) | Avg@5, aligned with the official default |
 | `frontierscience` | FrontierScience-Research | [`openai/frontierscience`](https://huggingface.co/datasets/openai/frontierscience) research split | Avg@30, aligned with the official default |
 | `hle` | Humanity's Last Exam, text-only | Gated [`cais/hle`](https://huggingface.co/datasets/cais/hle) dataset | One score per text-only item |
+| `swebench-pro` | SWE-Bench Pro | [`ScaleAI/SWE-bench_Pro`](https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro) test split | Evaluated with the benchmark's official [mini-SWE-agent harness and evaluator](https://github.com/scaleapi/SWE-bench_Pro-os) |
+| `scicode-verified` | SciCode-Verified | [SciCode-Verified v2 release](https://github.com/flyingwagner/scicode-verified/releases/tag/data) | Evaluated with the official [SciCode-Verified harness](https://github.com/flyingwagner/scicode-verified); pass@1 with cumulative subproblems and all-or-nothing main-problem scoring |
 
 For BrowseComp, we use five discard-all attempts and force a final answer when
 the fifth-attempt limit is reached. We evaluate xbench with Avg@5 and
 FrontierScience-Research with Avg@30, matching their official defaults.
 
+SWE-Bench Pro and SciCode-Verified are not run through the general
+`search`/`visit`/`code_exec` loop. SWE-Bench Pro uses the official public test
+split, official mini-SWE-agent harness, and official evaluator. SciCode-Verified
+uses its official with-background pass@1 protocol: subproblems are cumulative,
+and a main problem passes only when all of its scored subproblems pass.
+
 BrowseComp and xbench are MIT licensed through their official repositories.
 FrontierScience is Apache-2.0. HLE is marked MIT but gated, and its dataset card
-asks users not to publicly share, re-upload, or distribute the dataset. We
-therefore provide download scripts rather than copies of the benchmark data.
-See [`THIRD_PARTY.md`](THIRD_PARTY.md) for source and license links.
+asks users not to publicly share, re-upload, or distribute the dataset. The
+SWE-Bench Pro reference repository and mini-SWE-agent fork are MIT licensed;
+SciCode-Verified is distributed under Apache-2.0. We provide download scripts
+rather than copies of benchmark data. See [`THIRD_PARTY.md`](THIRD_PARTY.md)
+for source and license links.
 
-## Tool policy
+## General-agent tool policy
 
-We run each benchmark item in an OpenAI-compatible tool-calling loop with:
+For BrowseComp, xbench, FrontierScience-Research, and HLE, we run each item in
+an OpenAI-compatible tool-calling loop with:
 
 - `search`: Google Search results through Serper;
 - `visit`: webpage reading through Jina Reader followed by goal-conditioned
@@ -137,8 +148,8 @@ pip install -e .
 cp .env.example .env
 ```
 
-The package does not install a console command. Run the two scripts in
-`scripts/` directly.
+The package does not install a console command. Run the scripts in `scripts/`
+directly.
 
 Set `OPENAI_BASE_URL`, `OPENAI_API_KEY`, and `OPENAI_MODEL` for the evaluated
 model's OpenAI-compatible endpoint. `SERPER_API_KEY`, `JINA_API_KEY`, and
@@ -174,7 +185,21 @@ For HLE, accept the access conditions on Hugging Face, set `HF_TOKEN`, and run:
 python scripts/download_data.py --benchmarks hle
 ```
 
-## Run an evaluation
+Download the official SWE-Bench Pro test split:
+
+```bash
+python scripts/download_data.py --benchmarks swebench-pro
+```
+
+Download the SciCode-Verified v2 manifest, JSONL, and grading HDF5. The HDF5 is
+approximately 1.1 GB; all three files are checked against the release manifest
+and pinned MD5 values.
+
+```bash
+python scripts/download_data.py --benchmarks scicode-verified
+```
+
+## Run the general-agent evaluations
 
 Run one BrowseComp item once:
 
