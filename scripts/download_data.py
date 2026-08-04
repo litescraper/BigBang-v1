@@ -32,7 +32,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-    load_dotenv()
+    load_dotenv(REPOSITORY_ROOT / ".env")
     args = build_parser().parse_args()
     for name in args.benchmarks:
         for output in download_benchmark(name, args.data_root):

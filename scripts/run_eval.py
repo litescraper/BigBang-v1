@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from evaluation.agent import AgentRunner
 from evaluation.benchmarks.data import load_tasks
 from evaluation.benchmarks.judges import Judge
-from evaluation.benchmarks.registry import BENCHMARKS, get_benchmark
+from evaluation.benchmarks.registry import BIGBANG_HARNESS_BENCHMARKS, get_benchmark
 from evaluation.config import ModelConfig, ToolConfig
 from evaluation.context_policy import (
     BROWSECOMP_MAX_ATTEMPTS,
@@ -25,7 +25,7 @@ DEFAULT_DATA_ROOT = REPOSITORY_ROOT / "data"
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run a sequential BigBang-v1 evaluation.")
-    parser.add_argument("--benchmark", required=True, choices=sorted(BENCHMARKS))
+    parser.add_argument("--benchmark", required=True, choices=sorted(BIGBANG_HARNESS_BENCHMARKS))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
     parser.add_argument("--limit", type=int, default=0, help="0 evaluates every item")
@@ -44,7 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-    load_dotenv()
+    load_dotenv(REPOSITORY_ROOT / ".env")
     run_evaluation(build_parser().parse_args())
 
 

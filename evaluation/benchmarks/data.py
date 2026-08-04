@@ -13,6 +13,8 @@ from evaluation.benchmarks.registry import get_benchmark
 
 def load_tasks(name: str, data_root: Path, limit: int = 0) -> list[dict[str, Any]]:
     spec = get_benchmark(name)
+    if spec.harness != "bigbang":
+        raise ValueError(f"{spec.display_name} is evaluated with its official harness")
     path = data_root / spec.relative_path
     if not path.exists():
         raise FileNotFoundError(
