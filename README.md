@@ -21,11 +21,11 @@ SWE-Bench Pro and SciCode-Verified datasets.
 
 ## Main results
 
-Across the eight benchmarks below, BigBang-v1 records the highest score among
-the selected 35B models. It exceeds DeepSeek V4 Pro Preview on Frontier Science
-Research, Humanity's Last Exam, BioMysteryBench-HD, and PaperBench, matches it
-on MLE-Bench, and exceeds DeepSeek V4 Flash Preview on six of the eight
-benchmarks.
+BigBang-V1 on eight representative benchmarks spanning long-horizon search,
+software engineering, scientific research, and AI research. BigBang-V1 obtains
+the highest reported score among the selected 35B models on all eight
+benchmarks. It even exceeds DeepSeek V4 Pro Preview (1.6T) on FrontierScience
+Research, Humanity's Last Exam, and BioMysteryBench-HD.
 
 <p align="center">
   <a href="./assets/bigbang_main_figure.pdf"><img src="./assets/bigbang_main_figure.png" alt="BigBang-V1 on eight representative benchmarks" width="100%"></a>
@@ -37,7 +37,7 @@ benchmarks.
 
 Comparison of BigBang-V1 with representative closed- and open-source frontier
 models, together with models at the 35B scale, across benchmarks for
-long-horizon search, coding, scientific research, and AI research. The `-`
+long-horizon search, coding, scientific research, and AI research. The "`-`"
 indicates the score is not publicly available or not tested.
 
 <table>
