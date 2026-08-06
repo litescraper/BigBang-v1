@@ -25,7 +25,7 @@ BigBang-V1 on eight representative benchmarks spanning long-horizon search,
 software engineering, scientific research, and AI research. BigBang-V1 obtains
 the highest reported score among the selected 35B models on all eight
 benchmarks. It even exceeds DeepSeek V4 Pro Preview (1.6T) on FrontierScience
-Research, Humanity's Last Exam, and BioMysteryBench-HD.
+Research, Humanity's Last Exam, PaperBench(Code-Dev) and BioMysteryBench-HD.
 
 <p align="center">
   <a href="./assets/bigbang_main_figure.pdf"><img src="./assets/bigbang_main_figure.png" alt="BigBang-V1 on eight representative benchmarks" width="100%"></a>
@@ -77,8 +77,8 @@ indicates the score is not publicly available or not tested.
 <tr><td>BioMystery-HS</td><td align="center">88.5</td><td align="center">-</td><td align="center">76.7</td><td align="center">75.3</td><td align="center">68.0</td><td align="center">64.4</td><td align="center">57.5</td><td align="center">44.8</td><td align="center">42.9</td><td align="center">48.9</td><td align="center">50.2</td><td align="center"><strong>57.5</strong></td></tr>
 <tr><td>BioMystery-HD</td><td align="center">42.4</td><td align="center">-</td><td align="center">23.5</td><td align="center">21.6</td><td align="center">23.5</td><td align="center">13.7</td><td align="center">11.8</td><td align="center">2.0</td><td align="center">5.9</td><td align="center">2.0</td><td align="center">5.9</td><td align="center"><strong>15.7</strong></td></tr>
 <tr><td colspan="13" align="center"><em>AI Research</em></td></tr>
-<tr><td>MLE-Bench</td><td align="center">63.6</td><td align="center">-</td><td align="center">59.1</td><td align="center">72.7</td><td align="center">40.9</td><td align="center">59.1</td><td align="center">40.9</td><td align="center">31.8</td><td align="center">18.2</td><td align="center">27.3</td><td align="center">27.3</td><td align="center"><strong>59.1</strong></td></tr>
-<tr><td>PaperBench</td><td align="center">-</td><td align="center">-</td><td align="center">64.2</td><td align="center">63.6</td><td align="center">40.4</td><td align="center">50.4</td><td align="center">36.7</td><td align="center">30.7</td><td align="center">14.8</td><td align="center">17.3</td><td align="center">20.5</td><td align="center"><strong>53.6</strong></td></tr>
+<tr><td>MLE-Bench(Lite)</td><td align="center">63.6</td><td align="center">-</td><td align="center">59.1</td><td align="center">72.7</td><td align="center">40.9</td><td align="center">59.1</td><td align="center">40.9</td><td align="center">31.8</td><td align="center">18.2</td><td align="center">27.3</td><td align="center">27.3</td><td align="center"><strong>59.1</strong></td></tr>
+<tr><td>PaperBench(Code-Dev)</td><td align="center">-</td><td align="center">-</td><td align="center">64.2</td><td align="center">63.6</td><td align="center">40.4</td><td align="center">50.4</td><td align="center">36.7</td><td align="center">30.7</td><td align="center">14.8</td><td align="center">17.3</td><td align="center">20.5</td><td align="center"><strong>53.6</strong></td></tr>
 </tbody>
 </table>
 
