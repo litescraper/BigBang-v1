@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Any, ClassVar
 
 import httpx
@@ -54,7 +55,7 @@ class SearchTool:
         if query_targets_huggingface(query):
             return "[search] Blocked by evaluation policy."
         response = self._client.post(
-            "https://google.serper.dev/search",
+            f'{os.getenv("SERPER_BASE_URL", "https://google.serper.dev").rstrip("/")}/search',
             headers={"X-API-KEY": self._api_key, "Content-Type": "application/json"},
             json={"q": query, "location": "United States", "gl": "us", "hl": "en"},
         )

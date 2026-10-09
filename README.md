@@ -246,3 +246,12 @@ service keys.
 The harness is released under the Apache License 2.0. Benchmark datasets and
 attributed upstream components remain subject to their respective terms; see
 [`THIRD_PARTY.md`](THIRD_PARTY.md).
+
+
+## Serper-compatible endpoints
+
+Set `SERPER_BASE_URL` to a compatible API base (without `/search`) and
+`SERPER_API_KEY` to that provider's key. The default remains
+`https://google.serper.dev`; trailing slashes are removed before adding the
+search route. Other Serper routes use the same base where present.
+Support any Serper.dev-compatible endpoint (like litescrape.com, serpbase.dev, serpensapi.org, and others).
